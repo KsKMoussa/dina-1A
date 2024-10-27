@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Preguntas y Respuestas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        #question-container {
+            display: none;
+            margin-bottom: 20px;
+        }
+        .question {
+            font-size: 1.5em;
+            padding: 20px;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            width: 50%;
+            margin: 20px auto;
+        }
+        .option-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 50%;
+            margin: 0 auto;
+            margin-bottom: 20px;
+        }
+        .option {
+            width: calc(50% - 10px);
+            padding: 20px;
+            margin: 5px;
+            background-color: #fff;
+            border: 2px solid #a0d1fb;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, font-size 0.3s, color 0.3s;
+            font-size: 1em;
+            color: #333;
+            font-weight: bold;
+        }
+        .option:hover {
+            background-color: #f0f8ff;
+        }
+        .selected.correct {
+            background-color: #4caf50;
+            color: #fff;
+            font-size: 2em;
+        }
+        .selected.incorrect {
+            background-color: #f44336;
+            color: #fff;
+        }
+        .question-numbers {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .question-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            color: #333;
+            transition: background-color 0.3s, border 0.3s;
+        }
+        .question-number:hover {
+            background-color: #f0f8ff;
+            border-color: #999;
+        }
+        .correct {
+            background-color: #4caf50 !important;
+            color: #fff !important;
+        }
+        .incorrect {
+            background-color: #f44336 !important;
+            color: #fff !important;
+        }
+        #score-container {
+            margin-top: 20px;
+            font-size: 4em;
+            color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reto de Riesgo , Vida y salud</h1>
+    <div id="question-container">
+        <div id="question" class="question"></div>
+        <div id="options" class="option-container"></div>
+    </div>
+    <div class="question-numbers">
+        <div class="question-number" onclick="showQuestion(0)" id="question-number-0">1</div>
+        <div class="question-number" onclick="showQuestion(1)" id="question-number-1">2</div>
+        <div class="question-number" onclick="showQuestion(2)" id="question-number-2">3</div>
+        <div class="question-number" onclick="showQuestion(3)" id="question-number-3">4</div>
+        <div class="question-number" onclick="showQuestion(4)" id="question-number-4">5</div>
+        <div class="question-number" onclick="showQuestion(5)" id="question-number-5">6</div>
+        <div class="question-number" onclick="showQuestion(6)" id="question-number-6">7</div>
+        <div class="question-number" onclick="showQuestion(7)" id="question-number-7">8</div>
+        <div class="question-number" onclick="showQuestion(8)" id="question-number-8">9</div>
+        <div class="question-number" onclick="showQuestion(9)" id="question-number-9">10</div>
+    </div>
+    <div id="score-container">0</div>
+    <audio id="correct-sound" src="training-program-correct2-88734.mp3" preload="auto"></audio>
+    <audio id="incorrect-sound" src="negative_beeps-6008.mp3" preload="auto"></audio>
+    <script>
+    const questions = [
+            { id: 1, question: "1.La esencia del riesgo se caracteriza por:", answer: "La incertidumbre", options: ["La certeza", "La incertidumbre", "La brujería", "Ninguna de las anteriores"] },{ id: 2, question: "¿El riesgo presenta dos significados o consecuencias que se pueden resumir en:?", answer: "Todas de las anteriores", options: ["Positivo o negativo", "Éxito o fracaso", "Ganancia o pérdida", "Todas de las anteriores"] },{ id: 3, question: "¿El riesgo especulativo es aquel que al materializarse puede generar las siguientes situaciones:?", answer: "Sin pérdida ni ganancia , empate", options: ["Lucro o ganancia financiera", "Pérdida Financiera", "Sin pérdida ni ganancia , empate", "Todas de las anteriores"] },{ id: 4, question: "En los seguros de Vida, el Asegurado de ninguna manera puede ser:", answer: "El Beneficiario", options: ["El tomador", "El Titular", "El Beneficiario", "El Contratante"] },{ id: 5, question: "El señor Carlos solicita una póliza de seguro de Vida, y designa a su amigo José como beneficiario. La Aseguradora rechaza la solicitud de seguro debido a:", answer: "Entre el Señor José y señor Carlos no existe interés asegurable", options: ["Entre el Señor José y señor Carlos no existe interés asegurable", "Carlos es soltero", "José tiene una enfermedad grave", "Ninguna de las anteriores"] },{ id: 6, question: "En los seguros de Vida, Quien paga la prima se define como:", answer: "El tomador", options: ["El Beneficiario", "El Titular", "El Asegurado", "El tomador"] },{ id: 7, question: "¿Cuándo hablamos de un seguro cuya  prima del seguro es fija de 1.200 USD anual, con 30 años de duración, y cubre 500.000 USD en caso de fallecimiento,  se trata de un seguro:", answer: "Seguro de Vida a término de 30 años", options: ["Seguro de Vida a término de 30 años", "Seguro Dotal Puro a 30 años", "Seguro Decreciente anual  por 30 años", "Seguro Ordinario de vida"] },{ id: 8, question: "El objeto del seguro de salud lo podemos resumir en:", answer: "Indemnizar los gastos razonables en caso de accidente y/o enfermedad del asegurado", options: ["Indemnización en caso de muerte del asegurado", "Indemnizar una renta en caso de la sobrevivencia del asegurado", "Cubrir los gastos escolares de los hijos en la Universidad", "Indemnizar los gastos razonables en caso de accidente y/o enfermedad del asegurado"] },{ id: 9, question: "La señora Gabriela tiene una póliza de salud con una suma asegurada vitalicia de USD 150.000. La señora Gabriela sufre un accidente grave, el tratamiento genera gastos por el orden de USD 120.000. A los tres años, después  del accidente, la señora Gabriela sufre una enfermedad y los gastos alcanzan los  USD 50.000. Cuanto indemniza la aseguradora:", answer: "La  aseguradora indemniza USD 120.000 por el accidente y USD 30.000 por la enfermedad", options: ["La  aseguradora indemniza USD 120.000 por el accidente y no indemniza la enfermedad", "La  aseguradora indemniza USD 120.000 por el accidente y USD 30.000 por la enfermedad", "La  aseguradora indemniza USD 120.000 por el accidente y USD 50.000 por la enfermedad", "Ninguna de las anteriores"] },{ id: 10, question: "El Señor Gabriel posee una póliza de salud con la aseguradora “Alfa”, con una suma asegurada anual renovable de USD 250.000 y un deducible de USD 2.000 por año póliza. El señor Gabriel presenta una emergencia médica que genera gastos por el orden de USD 10.000. La aseguradora indemniza:", answer: "USD    8.000", options: ["USD    8.000", "USD 10.000", "USD    5.000", "No indemniza"] }
+        ];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        function loadQuestion() {
+            const questionContainer = document.getElementById('question-container');
+            const questionElement = document.getElementById('question');
+            const optionsElement = document.getElementById('options');
+            const scoreContainer = document.getElementById('score-container');
+            if (currentQuestionIndex < questions.length) {
+                const currentQuestion = questions[currentQuestionIndex];
+                questionElement.textContent = currentQuestion.question;
+                optionsElement.innerHTML = '';
+                currentQuestion.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.classList.add('option');
+                    button.onclick = () => checkAnswer(button, currentQuestion.answer);
+                    optionsElement.appendChild(button);
+                });
+                questionContainer.style.display = 'block';
+            } else {
+                questionContainer.style.display = 'none';
+                alert('¡Has completado el juego!');
+            }
+            scoreContainer.textContent = score;
+        }
+        function checkAnswer(button, correctAnswer) {
+            const options = document.querySelectorAll('.option');
+            const correctSound = document.getElementById('correct-sound');
+            const incorrectSound = document.getElementById('incorrect-sound');
+            const questionNumber = document.getElementById(`question-number-${currentQuestionIndex}`);
+            options.forEach(option => {
+                option.disabled = true;
+            });
+            if (button.textContent === correctAnswer) {
+                button.classList.add('selected', 'correct');
+                correctSound.play();
+                score++;
+                questionNumber.classList.add('correct');
+            } else {
+                button.classList.add('selected', 'incorrect');
+                incorrectSound.play();
+                questionNumber.classList.add('incorrect');
+            }
+            document.getElementById('score-container').textContent = score;
+        }
+        function showQuestion(index) {
+            currentQuestionIndex = index;
+            loadQuestion();
+        }
+        loadQuestion();
+    </script>
+</body>
+</html>
